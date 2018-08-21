@@ -4,8 +4,15 @@ const express = require('express');
 const userCtrl = require('../controllers/userController');
 const localCtrl = require('../controllers/localController');
 const adminCtrl = require('../controllers/userAdminController');
+const menuCtrl = require('../controllers/menuController');
 const auth = require('../middlewares/auth');
 const api = express.Router();
+
+//URL PRODUCT
+
+api.post('/menu', menuCtrl.createMenu);
+
+api.get('/product/:id_local', menuCtrl.getProduct);
 
 //URL APP
 api.post('/signup', userCtrl.signUp);
@@ -18,11 +25,13 @@ api.get('/private', auth, (req, res) => {
 
 api.get('/local', localCtrl.getAll);
 
+
 //URL ADMIN
 
 api.post('/signupadmin', adminCtrl.signUpAdmin);
 
 api.post('/signinadmin', adminCtrl.signInAdmin);
+
 
 
 //Recordar agregar el campo id_empresa a la tabla producto

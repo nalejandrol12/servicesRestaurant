@@ -1,7 +1,6 @@
 'use strict';
 
 const Local = require('../models/userAdmin');
-const services = require('../services/index');
 
 //method is by get all the local
 function getAll(req, res) {
