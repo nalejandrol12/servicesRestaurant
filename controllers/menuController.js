@@ -8,9 +8,11 @@ async function createMenu(req, res) {
     menu.description = req.body.description;
     menu.category = req.body.category;
     menu.quantity = req.body.quantity;
+    menu.price = req.body.price;
+    menu.image = req.body.image;
     menu.id_local = req.body.id_local;
 
-    menu.save((err, menuStored) => {
+    await menu.save((err, menuStored) => {
         if (err) res.status(500).send({ message: `Error al salvar la base de datos: ${err}` })
 
         res.status(200).send({ product: menuStored });
@@ -20,7 +22,7 @@ async function createMenu(req, res) {
 async function getProduct(req, res) {
     let productId = req.params.id_local;
 
-    Menu.find({id_local: productId}, (err, product) => {
+    await Menu.find({ id_local: productId }, (err, product) => {
         if (err)
             return res.status(500).send({ message: `Error al hacer la peticion al servidor: ${err}` });
 
