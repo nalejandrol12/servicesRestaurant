@@ -10,6 +10,11 @@ async function createMenu(req, res) {
     menu.quantity = req.body.quantity;
     menu.price = req.body.price;
     menu.image = req.body.image;
+    if (menu.category === 'COMBOS') {
+        menu.drink = req.body.drink;
+    } else {
+        menu.drink = 'null';
+    }
     menu.id_local = req.body.id_local;
 
     await menu.save((err, menuStored) => {
@@ -19,17 +24,30 @@ async function createMenu(req, res) {
     })
 }
 
-async function getProduct(req, res) {
+function getProduct(req, res) {
     let productId = req.params.id_local;
-
-    await Menu.find({ id_local: productId }, (err, product) => {
+    var data = [];
+    Menu.find({ id_local: productId }, (err, product) => {
         if (err)
             return res.status(500).send({ message: `Error al hacer la peticion al servidor: ${err}` });
 
         if (!product)
             return res.status(404).send({ message: `El producto no existe` })
 
-        res.status(200).send(product);
+        for (var i = 0; i < product.length; i++) {
+            data[i] = {
+                "_id": product[i]._id,
+                "name": product[i].name,
+                "description": product[i].description,
+                "category": product[i].category,
+                "quantity": product[i].quantity,
+                "price": product[i].price,
+                "image": product[i].image,
+                "drink": product[i].drink.split("|"),
+                "id_local": product[i].id_local
+            }
+        }
+        res.status(200).send(data);
     })
 }
 

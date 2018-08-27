@@ -10,6 +10,7 @@ const MenuSchema = new Schema({
     quantity: { type: Number, required: true },
     price: { type: Number, required: true },
     image: { type: String, required: true },
+    drink: { type: String, required: true },
     id_local: { type: String, required: true }
 });
 
