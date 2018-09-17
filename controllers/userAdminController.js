@@ -21,6 +21,7 @@ function signUpAdmin(req, res) {
                     name: req.body.name,
                     image: req.body.image,
                     schedule: req.body.schedule,
+                    address: req.body.address,
                     phone: req.body.phone,
                     description: req.body.description,
                     email: req.body.email,

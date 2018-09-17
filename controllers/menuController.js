@@ -51,7 +51,100 @@ function getProduct(req, res) {
     })
 }
 
+function getName(req, res) {
+    let name = req.params.name;
+    var data = [];
+    var time = {
+        "amigo mio": 8,
+        "cafeteria IUE": 4,
+        "La Pepiada": 6
+    }
+    var sum;
+    Menu.find({ name: {'$regex': '^'+name+'$',$options:'i'} }, (err, product) => {
+        if (err)
+            return res.status(500).send({ message: `Error al hacer la peticion al servidor: ${err}` });
+
+        if (!product)
+            return res.status(404).send({ message: `El producto no existe` })
+
+        for (var i = 0; i < product.length; i++) {
+
+            sum = time[product[i].name_local] + product[i].time;
+
+            data[i] = {
+                "_id": product[i]._id,
+                "name": product[i].name,
+                "description": product[i].description,
+                "category": product[i].category,
+                "quantity": product[i].quantity,
+                "price": product[i].price,
+                "image": product[i].image,
+                "drink": product[i].drink.split("|"),
+                "id_local": product[i].id_local,
+                "name_local": product[i].name_local,
+                "address_local": product[i].address_local,
+                "time": sum
+            };
+
+        }
+
+        data.sort(function (a, b) {
+            return (a.price - b.price)
+        });
+
+        res.status(200).send(data);
+    })
+}
+
+function getName2(req, res) {
+    let name = req.params.name;
+    var data = [];
+    var time = {
+        "amigo mio": 8,
+        "cafeteria IUE": 4,
+        "La Pepiada": 6
+    }
+    var sum;
+    Menu.find({ name: {'$regex': '^'+name+'$',$options:'i'} }, (err, product) => {
+        if (err)
+            return res.status(500).send({ message: `Error al hacer la peticion al servidor: ${err}` });
+
+        if (!product)
+            return res.status(404).send({ message: `El producto no existe` })
+
+        for (var i = 0; i < product.length; i++) {
+
+            sum = time[product[i].name_local] + product[i].time;
+
+            data[i] = {
+                "_id": product[i]._id,
+                "name": product[i].name,
+                "description": product[i].description,
+                "category": product[i].category,
+                "quantity": product[i].quantity,
+                "price": product[i].price,
+                "image": product[i].image,
+                "drink": product[i].drink.split("|"),
+                "id_local": product[i].id_local,
+                "name_local": product[i].name_local,
+                "address_local": product[i].address_local,
+                "time": sum
+            };
+
+        }
+
+        data.sort(function (a, b) {
+            return (a.time - b.time)
+        });
+
+        res.status(200).send(data);
+    })
+}
+
+
 module.exports = {
     createMenu,
-    getProduct
+    getProduct,
+    getName,
+    getName2
 }

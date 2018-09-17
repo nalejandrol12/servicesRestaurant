@@ -14,6 +14,10 @@ api.post('/menu', menuCtrl.createMenu);
 
 api.get('/product/:id_local', menuCtrl.getProduct);
 
+api.get('/name/:name', menuCtrl.getName);
+
+api.get('/name2/:name', menuCtrl.getName2);
+
 //URL APP
 api.post('/signup', userCtrl.signUp);
 
