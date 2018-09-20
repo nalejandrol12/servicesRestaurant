@@ -83,7 +83,9 @@ function getName(req, res) {
                 "id_local": product[i].id_local,
                 "name_local": product[i].name_local,
                 "address_local": product[i].address_local,
-                "time": sum
+                "time_arrival": time[product[i].name_local],
+                "preparation_time": product[i].time,
+                "total_time": sum 
             };
 
         }
@@ -128,7 +130,9 @@ function getName2(req, res) {
                 "id_local": product[i].id_local,
                 "name_local": product[i].name_local,
                 "address_local": product[i].address_local,
-                "time": sum
+                "time_arrival": time[product[i].name_local],
+                "preparation_time": product[i].time,
+                "total_time": sum 
             };
 
         }
