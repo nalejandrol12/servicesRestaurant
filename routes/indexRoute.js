@@ -5,6 +5,7 @@ const userCtrl = require('../controllers/userController');
 const localCtrl = require('../controllers/localController');
 const adminCtrl = require('../controllers/userAdminController');
 const menuCtrl = require('../controllers/menuController');
+const orderCtrl = require('../controllers/orderController');
 const auth = require('../middlewares/auth');
 const api = express.Router();
 
@@ -14,9 +15,7 @@ api.post('/menu', menuCtrl.createMenu);
 
 api.get('/product/:id_local', menuCtrl.getProduct);
 
-api.get('/name/:name', menuCtrl.getName);
-
-api.get('/name2/:name', menuCtrl.getName2);
+api.post('/order', orderCtrl.insertOrder);
 
 //URL APP
 api.post('/signup', userCtrl.signUp);
@@ -29,6 +28,9 @@ api.get('/private', auth, (req, res) => {
 
 api.get('/local', localCtrl.getAll);
 
+api.get('/name/:name', menuCtrl.getName);
+
+api.get('/name2/:name', menuCtrl.getName2);
 
 //URL ADMIN
 
