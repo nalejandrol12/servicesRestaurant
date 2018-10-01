@@ -16,6 +16,7 @@ api.post('/menu', menuCtrl.createMenu);
 api.get('/product/:id_local', menuCtrl.getProduct);
 
 api.post('/order', orderCtrl.insertOrder);
+api.get('/email', orderCtrl.email)
 
 //URL APP
 api.post('/signup', userCtrl.signUp);
