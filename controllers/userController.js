@@ -69,7 +69,8 @@ function signIn(req, res) {
                     if (err) return err
                     if (isMatch) {
                         return res.status(200).send({
-                            token: service.createToken(user)
+                            token: service.createToken(user),
+                            id_user: user._id
                         });
                     } else {
                         return res.status(401).send({

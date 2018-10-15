@@ -5,11 +5,25 @@ const Order = require('../models/order');
 
 //This method is by insert a array of object in data base
 function insertOrder(req, res) {
-    var order = req.body.order;
+    var vector = req.body.order;
+    var userId = req.body.id_user;
+    var order = [];
+
+    for(var i=0; i<vector.length; i++){
+        order[i] = {
+            name: vector[i].name,
+            image: vector[i].image,
+            notes: vector[i].notes,
+            price: vector[i].price,
+            drink: vector[i].drink,
+            id_product: vector[i].id_product,
+            id_local: vector[i].id_local,
+            id_user: userId
+        }
+    }
 
     Order.insertMany(order, function (err, or) {
         if (err) throw err;
-
         return res.status(200).send({ message: "now" })
     });
 }

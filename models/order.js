@@ -10,7 +10,8 @@ const OrderSchema = new Schema({
     price: { type: Number, required: true },
     drink: { type: String, required: false },
     id_product: { type: String, required: true },
-    id_local: { type: String, required: true }
+    id_local: { type: String, required: true },
+    id_user: { type: String, required: true }
 });
 
 module.exports = mongoose.model('Order', OrderSchema);
