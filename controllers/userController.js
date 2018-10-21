@@ -30,7 +30,9 @@ function signUp(req, res) {
                     .then(result => {
                         console.log(result);
                         res.status(201).send({
-                            token: service.createToken(user)
+                            token: service.createToken(user),
+                            id_user: user._id,
+                            nameUser: user.name
                         });
                     })
                     .catch(err => {
@@ -70,7 +72,8 @@ function signIn(req, res) {
                     if (isMatch) {
                         return res.status(200).send({
                             token: service.createToken(user),
-                            id_user: user._id
+                            id_user: user._id,
+                            id_name: user.name
                         });
                     } else {
                         return res.status(401).send({

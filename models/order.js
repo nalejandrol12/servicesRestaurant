@@ -11,7 +11,9 @@ const OrderSchema = new Schema({
     drink: { type: String, required: false },
     id_product: { type: String, required: true },
     id_local: { type: String, required: true },
-    id_user: { type: String, required: true }
+    id_user: { type: String, required: true },
+    nameUser: { type: String, required: true },
+    signupDate: { type: Date, default: Date.now() }
 });
 
 module.exports = mongoose.model('Order', OrderSchema);

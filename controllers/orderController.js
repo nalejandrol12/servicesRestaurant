@@ -7,9 +7,10 @@ const Order = require('../models/order');
 function insertOrder(req, res) {
     var vector = req.body.order;
     var userId = req.body.id_user;
+    var name =  req.body.nameUser;
     var order = [];
 
-    for(var i=0; i<vector.length; i++){
+    for (var i = 0; i < vector.length; i++) {
         order[i] = {
             name: vector[i].name,
             image: vector[i].image,
@@ -18,7 +19,8 @@ function insertOrder(req, res) {
             drink: vector[i].drink,
             id_product: vector[i].id_product,
             id_local: vector[i].id_local,
-            id_user: userId
+            id_user: userId,
+            nameUser: name
         }
     }
 
@@ -63,8 +65,53 @@ function email() {
     });
 }
 
+function showOrder(req, res) {
+    Order.find({}, (err, order) => {
+        var idLocal = '5b78d073d3992f1e88ef45bb';
+
+        //console.log(order[0].signupDate);
+        let json = [];
+        var idUser = "";
+        var sw = 0;
+        var k = 0;
+        if (err) {
+            res.status(500).send({ message: err });
+        }
+        if (order.length != 0) {
+            for (var i = 0; i < order.length; i++) {
+                if (order[i].id_local == idLocal) {
+                    idUser = order[i].id_user;
+                    k = 0;
+                    if (sw == 0) {
+                        json[i] = {
+                            idUser: []
+                        }
+                        json[i].idUser.push(order[i])
+                        sw = 1;
+                    } else {
+                        for (var j = 0; j < json.length; j++) {
+                            if (json[j].idUser[0].id_user == idUser) {
+                                json[j].idUser.push(order[i]);
+                                k = 1;
+                            }
+                        }
+                        if (k == 0) {
+                            json[json.length] = {
+                                idUser: []
+                            }
+                            json[json.length].idUser.push(order[i])
+                        }
+                    }
+                }
+            }
+            res.status(200).send(json);
+        }
+    });
+}
+
 module.exports = {
     insertOrder,
-    email
+    email,
+    showOrder
 };
 
