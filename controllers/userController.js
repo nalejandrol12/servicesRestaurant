@@ -73,7 +73,7 @@ function signIn(req, res) {
                         return res.status(200).send({
                             token: service.createToken(user),
                             id_user: user._id,
-                            id_name: user.name
+                            nameUser: user.name
                         });
                     } else {
                         return res.status(401).send({
