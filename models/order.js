@@ -13,6 +13,7 @@ const OrderSchema = new Schema({
     id_local: { type: String, required: true },
     id_user: { type: String, required: true },
     nameUser: { type: String, required: true },
+    activo: { type: Boolean, default: true },
     signupDate: { type: Date, default: Date.now() }
 });
 

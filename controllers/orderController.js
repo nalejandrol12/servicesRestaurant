@@ -2,6 +2,8 @@
 
 const nodemailer = require('nodemailer');
 const Order = require('../models/order');
+const User = require('../models/user');
+const Local = require('../models/userAdmin');
 
 //This method is by insert a array of object in data base
 function insertOrder(req, res) {
@@ -30,7 +32,7 @@ function insertOrder(req, res) {
     });
 }
 
-function email() {
+async function email(local, user, total, value) {
     nodemailer.createTestAccount((err, account) => {
         // create reusable transporter object using the default SMTP transport
         let transporter = nodemailer.createTransport({
@@ -44,12 +46,15 @@ function email() {
         // setup email data with unicode symbols
         let mailOptions = {
             from: 'soport.restaurant@gmail.com', // sender address
-            to: 'nalejandro12@outlook.es', // list of receivers
-            subject: 'Hello', // Subject line
+            to: user, // list of receivers
+            subject: 'Pedido de '+local, // Subject line
             text: 'Hello world', // plain text body
-            html: '<b>Hello world?</b>' // html body
+            html: '<p>Hola, gracias por tu pedido, su total a pagar es de: '+total+' </p>' // html body
         };
 
+        if(value == 1){
+            mailOptions.html = '<p>Hola, su pedido fue rechazado disculpe las molestias.</p>';
+        }
         // send mail with defined transport object
         transporter.sendMail(mailOptions, (error, info) => {
             if (error) {
@@ -67,7 +72,7 @@ function email() {
 
 function showOrder(req, res) {
     Order.find({}, (err, order) => {
-        var idLocal = '5b78d073d3992f1e88ef45bb';
+        var idLocal = req.body.id_local;
 
         //console.log(order[0].signupDate);
         let json = [];
@@ -82,7 +87,7 @@ function showOrder(req, res) {
                 if (order[i].id_local == idLocal) {
                     idUser = order[i].id_user;
                     k = 0;
-                    if (sw == 0) {
+                    if (sw == 0 && order[i].activo == true) {
                         json[i] = {
                             idUser: []
                         }
@@ -90,12 +95,12 @@ function showOrder(req, res) {
                         sw = 1;
                     } else {
                         for (var j = 0; j < json.length; j++) {
-                            if (json[j].idUser[0].id_user == idUser) {
+                            if (json[j].idUser[0].id_user == idUser && order[i].activo == true) {
                                 json[j].idUser.push(order[i]);
                                 k = 1;
                             }
                         }
-                        if (k == 0) {
+                        if (k == 0 && order[i].activo == true) {
                             json[json.length] = {
                                 idUser: []
                             }
@@ -109,9 +114,36 @@ function showOrder(req, res) {
     });
 }
 
+async function acceptOrder(req, res) {
+    let json = {
+        id_local: "",
+        id_user: "",
+        value: ""
+    }
+
+    json.id_local = req.body.id_local;
+    json.id_user = req.body.id_user;
+    json.value = req.body.value;
+
+    var jsonUser = await User.findOne({_id: json.id_user});
+    var jsonLocal = await Local.findOne({_id: json.id_local});
+    var jsonOrder = await Order.find({id_user: json.id_user});
+    var con = 0;
+
+    for(var i = 0; i<jsonOrder.length; i++){
+        if(jsonOrder[i].id_local == json.id_local && jsonOrder[i].activo == true){
+            con = con + jsonOrder[i].price;
+        }
+    }
+
+    email(jsonLocal.name, jsonUser.email, con, json.value);
+
+    res.status(200).send({message: 'Se ha enviado el mensaje'});
+}
+
 module.exports = {
     insertOrder,
-    email,
+    acceptOrder,
     showOrder
 };
 
