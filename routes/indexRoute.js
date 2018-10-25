@@ -6,6 +6,7 @@ const localCtrl = require('../controllers/localController');
 const adminCtrl = require('../controllers/userAdminController');
 const menuCtrl = require('../controllers/menuController');
 const orderCtrl = require('../controllers/orderController');
+const imageCtrl = require('../controllers/imageController');
 const auth = require('../middlewares/auth');
 const api = express.Router();
 
@@ -41,6 +42,12 @@ api.get('/name2/:name', menuCtrl.getName2);
 api.post('/signupadmin', adminCtrl.signUpAdmin);
 
 api.post('/signinadmin', adminCtrl.signInAdmin);
+
+
+//URL image
+api.post('/saveImage', imageCtrl.saveImage);
+
+api.post('/deleteImage', imageCtrl.deleteImage);
 
 
 
