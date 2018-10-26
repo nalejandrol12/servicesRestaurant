@@ -37,6 +37,8 @@ api.get('/name/:name', menuCtrl.getName);
 
 api.get('/name2/:name', menuCtrl.getName2);
 
+api.post('/createMenu', menuCtrl.createMenu);
+
 //URL ADMIN
 
 api.post('/signupadmin', adminCtrl.signUpAdmin);
