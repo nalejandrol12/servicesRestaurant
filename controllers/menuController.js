@@ -1,26 +1,43 @@
 'use strict';
 
 const Menu = require('../models/menu');
+const User = require('../models/userAdmin');
 
 async function createMenu(req, res) {
+
     let menu = new Menu();
-    menu.name = req.body.name;
-    menu.description = req.body.description;
-    menu.category = req.body.category;
-    menu.quantity = req.body.quantity;
-    menu.price = req.body.price;
-    menu.image = req.body.image;
+    var image = "";
+    if(req.body.image == ""){
+        image = "default2.jpg"
+    } else {
+        image = req.body.image;
+    }
+
+    menu.name = req.body._body.name;
+    menu.description = req.body._body.description;
+    menu.category = req.body._body.category;
+    menu.quantity = Number(req.body._body.quantity);
+    menu.price = Number(req.body._body.price);
+    menu.image = image;
+    menu.time = 6;
+
     if (menu.category === 'COMBOS') {
-        menu.drink = req.body.drink;
+        menu.drink = req.body._body.drink;
     } else {
         menu.drink = 'null';
     }
     menu.id_local = req.body.id_local;
 
+    var object = await User.findOne({_id: req.body.id_local});
+
+    menu.name_local = object.name;
+
+    menu.address_local = object.address;
+
     await menu.save((err, menuStored) => {
         if (err) res.status(500).send({ message: `Error al salvar la base de datos: ${err}` })
 
-        res.status(200).send({ product: menuStored });
+        res.status(200).send({ message: "Éxito" });
     })
 }
 
