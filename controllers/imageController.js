@@ -22,7 +22,7 @@ function saveImage(req, res) {
         }
         var arrayOfFiles = [];
         if (files["name"] instanceof Array) {
-            arrayOfFiles = files[""];
+            arrayOfFiles = files["name"];
         } else {
             if (Object.keys(files).length != 0) {
                 arrayOfFiles.push(files["name"]);

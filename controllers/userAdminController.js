@@ -5,9 +5,10 @@ const service = require('../services');
 
 //method registers admin
 function signUpAdmin(req, res) {
+
     User.find({
-            email: req.body.email
-        })
+        email: req.body._body.email
+    })
         .exec()
         .then(user => {
             // Validate if the email already exists in the database
@@ -17,15 +18,25 @@ function signUpAdmin(req, res) {
                     message: "El email ya existe"
                 });
             } else {
+                var image = "";
+                if (req.body.image == "") {
+                    image = "default.jpg"
+                } else {
+                    image = req.body.image;
+                }
+
+                var schedule = req.body._body.horaInicial;
+                schedule += " " + req.body._body.horarioInicial + " - " + req.body._body.horaFinal + " " + req.body._body.horarioFinal;
+
                 const user = new User({
-                    name: req.body.name,
-                    image: req.body.image,
-                    schedule: req.body.schedule,
-                    address: req.body.address,
-                    phone: req.body.phone,
-                    description: req.body.description,
-                    email: req.body.email,
-                    password: req.body.password
+                    name: req.body._body.name,
+                    image: image,
+                    schedule: schedule,
+                    address: req.body._body.address,
+                    phone: req.body._body.phone,
+                    description: req.body._body.description,
+                    email: req.body._body.email,
+                    password: req.body._body.password
                 });
                 user
                     .save()
@@ -33,7 +44,8 @@ function signUpAdmin(req, res) {
                         console.log(result);
                         res.status(201).send({
                             token: service.createToken(user),
-                            id: user._id
+                            id: user._id,
+                            image: user.image
                         });
                     })
                     .catch(err => {
@@ -55,8 +67,8 @@ function signUpAdmin(req, res) {
 //method login Admin
 function signInAdmin(req, res) {
     User.findOne({
-            email: req.body.email
-        })
+        email: req.body.email
+    })
         .exec()
         .then(user => {
             //validates that the user is different from null, that is to say that the mail is valid
@@ -73,7 +85,8 @@ function signInAdmin(req, res) {
                     if (isMatch) {
                         return res.status(200).send({
                             token: service.createToken(user),
-                            id: user._id
+                            id: user._id,
+                            image: user.image
                         });
                     } else {
                         return res.status(401).json({
