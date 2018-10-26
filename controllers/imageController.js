@@ -32,6 +32,7 @@ function saveImage(req, res) {
                     data: route.split('\\')[1],
                     message: "Upload image successfully"
                 });
+                return "Delete image";
             } else {
                 res.json({
                     result: "failed",

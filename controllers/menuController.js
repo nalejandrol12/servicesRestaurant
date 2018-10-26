@@ -2,12 +2,13 @@
 
 const Menu = require('../models/menu');
 const User = require('../models/userAdmin');
+const Object = require('../controllers/imageController');
 
 async function createMenu(req, res) {
 
     let menu = new Menu();
     var image = "";
-    if(req.body.image == ""){
+    if (req.body.image == "") {
         image = "default2.jpg"
     } else {
         image = req.body.image;
@@ -28,28 +29,40 @@ async function createMenu(req, res) {
     }
     menu.id_local = req.body.id_local;
 
-    var object = await User.findOne({_id: req.body.id_local});
+    var object = await User.findOne({
+        _id: req.body.id_local
+    });
 
     menu.name_local = object.name;
 
     menu.address_local = object.address;
 
     await menu.save((err, menuStored) => {
-        if (err) res.status(500).send({ message: `Error al salvar la base de datos: ${err}` })
+        if (err) res.status(500).send({
+            message: `Error al salvar la base de datos: ${err}`
+        })
 
-        res.status(200).send({ message: "Éxito" });
+        res.status(200).send({
+            message: "Éxito"
+        });
     })
 }
 
 function getProduct(req, res) {
     let productId = req.params.id_local;
     var data = [];
-    Menu.find({ id_local: productId }, (err, product) => {
+    Menu.find({
+        id_local: productId
+    }, (err, product) => {
         if (err)
-            return res.status(500).send({ message: `Error al hacer la peticion al servidor: ${err}` });
+            return res.status(500).send({
+                message: `Error al hacer la peticion al servidor: ${err}`
+            });
 
         if (!product)
-            return res.status(404).send({ message: `El producto no existe` })
+            return res.status(404).send({
+                message: `El producto no existe`
+            })
 
         for (var i = 0; i < product.length; i++) {
             data[i] = {
@@ -77,12 +90,21 @@ function getName(req, res) {
         "La Pepiada": 6
     }
     var sum;
-    Menu.find({ name: {'$regex': '^'+name+'$',$options:'i'} }, (err, product) => {
+    Menu.find({
+        name: {
+            '$regex': '^' + name + '$',
+            $options: 'i'
+        }
+    }, (err, product) => {
         if (err)
-            return res.status(500).send({ message: `Error al hacer la peticion al servidor: ${err}` });
+            return res.status(500).send({
+                message: `Error al hacer la peticion al servidor: ${err}`
+            });
 
         if (!product)
-            return res.status(404).send({ message: `El producto no existe` })
+            return res.status(404).send({
+                message: `El producto no existe`
+            })
 
         for (var i = 0; i < product.length; i++) {
 
@@ -102,7 +124,7 @@ function getName(req, res) {
                 "address_local": product[i].address_local,
                 "time_arrival": time[product[i].name_local],
                 "preparation_time": product[i].time,
-                "total_time": sum 
+                "total_time": sum
             };
 
         }
@@ -124,12 +146,21 @@ function getName2(req, res) {
         "La Pepiada": 6
     }
     var sum;
-    Menu.find({ name: {'$regex': '^'+name+'$',$options:'i'} }, (err, product) => {
+    Menu.find({
+        name: {
+            '$regex': '^' + name + '$',
+            $options: 'i'
+        }
+    }, (err, product) => {
         if (err)
-            return res.status(500).send({ message: `Error al hacer la peticion al servidor: ${err}` });
+            return res.status(500).send({
+                message: `Error al hacer la peticion al servidor: ${err}`
+            });
 
         if (!product)
-            return res.status(404).send({ message: `El producto no existe` })
+            return res.status(404).send({
+                message: `El producto no existe`
+            })
 
         for (var i = 0; i < product.length; i++) {
 
@@ -149,7 +180,7 @@ function getName2(req, res) {
                 "address_local": product[i].address_local,
                 "time_arrival": time[product[i].name_local],
                 "preparation_time": product[i].time,
-                "total_time": sum 
+                "total_time": sum
             };
 
         }
@@ -162,10 +193,37 @@ function getName2(req, res) {
     })
 }
 
+function deleteProduct(req, res) {
+    let json = {
+        id: req.body.id,
+        image: req.body.image
+    }
+
+
+    Menu.deleteOne({
+        _id: json.id
+    }, function (err, obj) {
+        if (err) {
+            throw err
+            res.status(500).send(err)
+        } else {
+            if (json.image != "default2.jpg" && json.image != "default.jpg") {
+                Object.deleteImage(json.image);
+            }
+            res.status(200).send({
+                message: 'Se elimino correctamente el producto'
+            })
+        };
+    });
+    res.status(500).send({
+        message: 'No se elimino el producto'
+    });
+}
 
 module.exports = {
     createMenu,
     getProduct,
     getName,
-    getName2
+    getName2,
+    deleteProduct
 }

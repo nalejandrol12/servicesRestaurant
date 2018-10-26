@@ -39,6 +39,8 @@ api.get('/name2/:name', menuCtrl.getName2);
 
 api.post('/createMenu', menuCtrl.createMenu);
 
+api.post('/deleteMenu', menuCtrl.deleteProduct);
+
 //URL ADMIN
 
 api.post('/signupadmin', adminCtrl.signUpAdmin);
